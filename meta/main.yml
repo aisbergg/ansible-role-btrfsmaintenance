@@ -3,7 +3,7 @@ dependencies: []
 
 galaxy_info:
   author: Aisbergg
-  description: Installs and configure the Btrfs Maintenance scripts on Linux systems.
+  description: Install and configure the Btrfs Maintenance scripts on Linux systems.
   company: none
   issue_tracker_url: https://github.com/Aisbergg/ansible-role-btrfsmaintenance/issues
   license: MIT
