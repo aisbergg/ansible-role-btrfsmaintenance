@@ -15,7 +15,7 @@
   systemd:
     name: btrfsmaintenance-refresh
     enabled: true
-    state: started
+    state: stopped
   when: btrfsmaintenance_service_enabled
 
 - name: Disable scripts
