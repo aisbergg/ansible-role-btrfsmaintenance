@@ -1,0 +1,36 @@
+---
+- name: Generate configuration
+  vars:
+    cfg: "{{ btrfsmaintenance_config_defaults | combine(btrfsmaintenance_config) }}"
+  template:
+    src: btrfsmaintenance.j2
+    dest: "{{ btrfsmaintenance_config_file }}"
+    owner: root
+    group: root
+    mode: 0644
+    lstrip_blocks: true
+  notify: restart btrfsmaintenance
+
+- name: Enable scripts
+  systemd:
+    name: btrfsmaintenance-refresh
+    enabled: true
+    state: started
+  when: btrfsmaintenance_service_enabled
+
+- name: Disable scripts
+  systemd:
+    name: "{{ item }}"
+    enabled: false
+    state: stopped
+    loop:
+      - btrfsmaintenance-refresh.service
+      - btrfs-balance.service
+      - btrfs-defrag.service
+      - btrfs-scrub.service
+      - btrfs-trim.service
+      - btrfs-balance.timer
+      - btrfs-defrag.timer
+      - btrfs-scrub.timer
+      - btrfs-trim.timer
+  when: not btrfsmaintenance_service_enabled

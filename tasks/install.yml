@@ -1,0 +1,49 @@
+---
+- name: Get installed version
+  shell: "cat /usr/share/btrfsmaintenance/version || echo -n '0'"
+  failed_when: false
+  changed_when: false
+  register: btrfsmaintenance_installed_version
+
+- name: Check what the latest version is
+  shell: "git ls-remote --tags --refs --sort='v:refname' {{ btrfsmaintenance_repository }} | tail -n1 | sed 's/.*\\/v//'"
+  register: btrfsmaintenance_latest_version
+  failed_when: btrfsmaintenance_latest_version.rc != 0
+  changed_when: false
+  when: btrfsmaintenance_version == 'latest'
+
+- set_fact:
+    btrfsmaintenance_version_to_install: "{{ btrfsmaintenance_latest_version.stdout_lines[0] if btrfsmaintenance_version == 'latest' else btrfsmaintenance_version }}"
+
+- block:
+    - name: Ensure source directory exists
+      file:
+        state: directory
+        path: /usr/local/src
+
+    - name: Clone source code
+      git:
+        repo: "{{ btrfsmaintenance_repository }}"
+        version: "v{{ btrfsmaintenance_version_to_install }}"
+        clone: true
+        depth: 1
+        force: true
+        dest: /usr/local/src/btrfsmaintenance
+
+    - name: "Install btrfsmaintenance scripts version {{ btrfsmaintenance_version_to_install }}"
+      command: "/bin/bash /usr/local/src/btrfsmaintenance/dist-install.sh"
+      register: install_btrfsmaintenance
+      failed_when: install_btrfsmaintenance.rc != 0
+      changed_when: true
+      notify: restart btrfsmaintenance
+
+    - name: Create version file
+      copy:
+        dest: "/usr/share/btrfsmaintenance/version"
+        force: yes
+        owner: root
+        group: root
+        content: "{{ btrfsmaintenance_version_to_install }}"
+        mode: "644"
+
+  when: btrfsmaintenance_version_to_install != btrfsmaintenance_installed_version.stdout_lines[0]

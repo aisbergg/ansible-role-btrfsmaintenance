@@ -1,0 +1,6 @@
+---
+- name: restart btrfsmaintenance
+  systemd:
+    name: btrfsmaintenance-refresh
+    state: restarted
+  when: btrfsmaintenance_service_enabled

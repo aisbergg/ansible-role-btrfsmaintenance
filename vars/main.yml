@@ -1,0 +1,23 @@
+---
+# default variables
+
+# path for configuration file
+btrfsmaintenance_config_file: /etc/default/btrfsmaintenance
+
+# defaults to put into the configuration file
+btrfsmaintenance_config_defaults:
+  log_output: "journal"
+  defrag_paths: []
+  defrag_period: "none"
+  defrag_min_size: "+1M"
+  balance_mountpoints: ["/"]
+  balance_period: "weekly"
+  balance_dusage: "1 5 10 20 30 40 50"
+  balance_musage: "1 5 10 20 30"
+  scrub_mountpoints: ["/"]
+  scrub_period: "monthly"
+  scrub_priority: "idle"
+  scrub_read_only: false
+  trim_period: "none"
+  trim_mountpoints: ["/"]
+  allow_concurrency: false

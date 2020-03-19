@@ -1,0 +1,12 @@
+---
+# repository to install from
+btrfsmaintenance_repository: "https://github.com/kdave/btrfsmaintenance.git"
+
+# version to install; can be either a specific value (e.g. '0.4.2') or 'latest'
+btrfsmaintenance_version: latest
+
+# enable the btrfsmaintenance scripts to run periodically
+btrfsmaintenance_service_enabled: true
+
+# defaults are set in vars/main.yml
+btrfsmaintenance_config: {}

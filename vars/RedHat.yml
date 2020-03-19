@@ -1,0 +1,5 @@
+---
+# defaults for RedHat distributions
+
+# path for configuration file
+btrfsmaintenance_config_file: /etc/sysconfig/btrfsmaintenance
