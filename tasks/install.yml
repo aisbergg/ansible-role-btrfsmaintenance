@@ -35,12 +35,17 @@
         force: true
         dest: /usr/local/src/btrfsmaintenance
 
+    # the dist-install.sh script from the repo does a crappy job, therefore do it manually
     - name: "Install btrfsmaintenance scripts version {{ version_to_install }}"
-      command: "/bin/bash /usr/local/src/btrfsmaintenance/dist-install.sh"
-      register: install_btrfsmaintenance
-      failed_when: install_btrfsmaintenance.rc != 0
+      shell: |
+        install -d -oroot -groot -m755 {{ btrfsmaintenance_install_path }}
+        install -oroot -groot -m755 btrfs-*.sh btrfsmaintenance-refresh-cron.sh {{ btrfsmaintenance_install_path }}/
+        install -oroot -groot -m644 btrfsmaintenance-functions {{ btrfsmaintenance_install_path }}/
+        install -oroot -groot -m644 *.service *.path {{ btrfsmaintenance_services_path }}/
+      args:
+        executable: /bin/bash
+        chdir: /usr/local/src/btrfsmaintenance
       changed_when: true
-      notify: restart btrfsmaintenance
 
     - name: Reload systemd configs
       systemd:

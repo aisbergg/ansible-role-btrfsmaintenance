@@ -1,6 +1,10 @@
 ---
 # default variables
 
+# base path for systemd service files
+btrfsmaintenance_services_path: /usr/lib/systemd/system
+btrfsmaintenance_install_path: /usr/share/btrfsmaintenance
+
 # path for configuration file
 btrfsmaintenance_config_file: /etc/default/btrfsmaintenance
 
