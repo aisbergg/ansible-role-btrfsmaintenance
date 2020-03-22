@@ -9,6 +9,8 @@
   shell: |
     set -o pipefail
     git ls-remote --tags --refs {{ btrfsmaintenance_repository }} | sed 's/.*\/v//' | sort -V | tail -n1
+  args:
+    executable: /bin/bash
   register: latest_version
   failed_when: latest_version.rc != 0
   changed_when: false
