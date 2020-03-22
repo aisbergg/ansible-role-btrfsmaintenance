@@ -42,6 +42,11 @@
       changed_when: true
       notify: restart btrfsmaintenance
 
+    - name: Reload systemd configs
+      systemd:
+        daemon_reload: yes
+      notify: restart systemd-swap
+
     - name: Create version file
       copy:
         dest: "/usr/share/btrfsmaintenance/version"
