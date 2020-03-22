@@ -8,7 +8,7 @@
 - name: Check what the latest version is
   shell: |
     set -o pipefail
-    git ls-remote --tags --refs --sort='v:refname' {{ btrfsmaintenance_repository }} | tail -n1 | sed 's/.*\/v//'
+    git ls-remote --tags --refs {{ btrfsmaintenance_repository }} | sed 's/.*\/v//' | sort -V | tail -n1
   register: latest_version
   failed_when: latest_version.rc != 0
   changed_when: false
