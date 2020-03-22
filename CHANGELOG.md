@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2020-02-22
+### Changed
+- Correct required Ansible version
+
+### Fixed
+- Use `sort -V` instead of the Git built-in feature to sort version tags
+
 ## [1.0.0] - 2020-02-19
 ### Added
 - First version of the role
