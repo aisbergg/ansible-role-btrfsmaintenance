@@ -1,15 +1,16 @@
 ---
-# default variables
+__btrfsmaintenance_requirements:
+  - git
 
 # base path for systemd service files
-btrfsmaintenance_services_path: /usr/lib/systemd/system
-btrfsmaintenance_install_path: /usr/share/btrfsmaintenance
+__btrfsmaintenance_services_path: /usr/lib/systemd/system
+__btrfsmaintenance_install_path: /usr/share/btrfsmaintenance
 
 # path for configuration file
-btrfsmaintenance_config_file: /etc/default/btrfsmaintenance
+__btrfsmaintenance_config_file: /etc/default/btrfsmaintenance
 
 # defaults to put into the configuration file
-btrfsmaintenance_config_defaults:
+__btrfsmaintenance_config_defaults:
   log_output: "journal"
   defrag_paths: []
   defrag_period: "none"

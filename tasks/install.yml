@@ -1,8 +1,14 @@
 ---
+- name: Install requirements
+  package:
+    name: "{{ __btrfsmaintenance_requirements }}"
+    state: present
+
 - name: Get installed version
   shell: "cat /usr/share/btrfsmaintenance/version || echo -n '0'"
   failed_when: false
   changed_when: false
+  check_mode: false
   register: installed_version
 
 - name: Check what the latest version is
@@ -14,13 +20,15 @@
   register: latest_version
   failed_when: latest_version.rc != 0
   changed_when: false
+  check_mode: false
   when: btrfsmaintenance_version == 'latest'
 
 - name: Define version to install
   set_fact:
     version_to_install: "{{ latest_version.stdout_lines[0] if btrfsmaintenance_version == 'latest' else btrfsmaintenance_version }}"
 
-- block:
+- when: version_to_install != installed_version.stdout_lines[0]
+  block:
     - name: Ensure source directory exists
       file:
         state: directory
@@ -38,10 +46,10 @@
     # the dist-install.sh script from the repo does a crappy job, therefore do it manually
     - name: "Install btrfsmaintenance scripts version {{ version_to_install }}"
       shell: |
-        install -d -oroot -groot -m755 {{ btrfsmaintenance_install_path }}
-        install -oroot -groot -m755 btrfs-*.sh btrfsmaintenance-refresh-cron.sh {{ btrfsmaintenance_install_path }}/
-        install -oroot -groot -m644 btrfsmaintenance-functions {{ btrfsmaintenance_install_path }}/
-        install -oroot -groot -m644 *.service *.path {{ btrfsmaintenance_services_path }}/
+        install -d -oroot -groot -m755 {{ __btrfsmaintenance_install_path }}
+        install -oroot -groot -m755 btrfs-*.sh btrfsmaintenance-refresh-cron.sh {{ __btrfsmaintenance_install_path }}/
+        install -oroot -groot -m644 btrfsmaintenance-functions {{ __btrfsmaintenance_install_path }}/
+        install -oroot -groot -m644 *.service *.path {{ __btrfsmaintenance_services_path }}/
       args:
         executable: /bin/bash
         chdir: /usr/local/src/btrfsmaintenance
@@ -49,16 +57,14 @@
 
     - name: Reload systemd configs
       systemd:
-        daemon_reload: yes
+        daemon_reload: true
       notify: restart systemd-swap
 
     - name: Create version file
       copy:
         dest: "/usr/share/btrfsmaintenance/version"
-        force: yes
+        force: true
         owner: root
         group: root
         content: "{{ version_to_install }}"
         mode: "644"
-
-  when: version_to_install != installed_version.stdout_lines[0]

@@ -2,4 +2,4 @@
 # defaults for Debian distributions
 
 # base path for systemd service files
-btrfsmaintenance_services_path: /lib/systemd/system
+__btrfsmaintenance_services_path: /lib/systemd/system

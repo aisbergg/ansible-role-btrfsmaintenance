@@ -1,14 +1,13 @@
 ---
 - name: Generate configuration
   vars:
-    cfg: "{{ btrfsmaintenance_config_defaults | combine(btrfsmaintenance_config) }}"
+    cfg: "{{ __btrfsmaintenance_config_defaults | combine(btrfsmaintenance_config) }}"
   template:
     src: btrfsmaintenance.j2
-    dest: "{{ btrfsmaintenance_config_file }}"
+    dest: "{{ __btrfsmaintenance_config_file }}"
     owner: root
     group: root
     mode: 0644
-    lstrip_blocks: true
   notify: restart btrfsmaintenance
 
 - name: Enable scripts
