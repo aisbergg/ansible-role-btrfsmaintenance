@@ -19,10 +19,14 @@ galaxy_info:
         - all
     - name: Debian
       versions:
-        - all
+        - bullseye
+        - buster
+        - stretch
     - name: Ubuntu
       versions:
-        - all
+        - focal
+        - bionic
+        - xenial
     - name: Archlinux
       versions:
         - all
