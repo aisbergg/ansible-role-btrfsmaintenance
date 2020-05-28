@@ -6,13 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.2] - 2020-05-28
+### Fixed
+- Clean up repo
+
 ## [1.2.1] - 2020-05-18
 ### Fixed
-- Narrowed down supported platforms
+- Narrow down supported platforms
 
 ## [1.2.0] - 2020-05-18
 ### Changed
-- Cleanup
+- Clean up repo
 
 ### Added
 - Add support for checkmode
