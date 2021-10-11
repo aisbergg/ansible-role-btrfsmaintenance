@@ -1,18 +1,18 @@
 ---
-- name: Install requirements
-  package:
+- name: install requirements
+  ansible.builtin.package:
     name: "{{ __btrfsmaintenance_requirements }}"
     state: present
 
-- name: Get installed version
-  shell: "cat /usr/share/btrfsmaintenance/version || echo -n '0'"
+- name: get installed version
+  ansible.builtin.shell: "cat /usr/share/btrfsmaintenance/version || echo -n '0'"
   failed_when: false
   changed_when: false
   check_mode: false
   register: installed_version
 
-- name: Check what the latest version is
-  shell: |
+- name: check what the latest version is
+  ansible.builtin.shell: |
     set -o pipefail
     git ls-remote --tags --refs {{ btrfsmaintenance_repository }} | sed 's/.*\/v//' | sort -V | tail -n1
   args:
@@ -23,19 +23,24 @@
   check_mode: false
   when: btrfsmaintenance_version == 'latest'
 
-- name: Define version to install
+- name: define version to install
   set_fact:
-    version_to_install: "{{ latest_version.stdout_lines[0] if btrfsmaintenance_version == 'latest' else btrfsmaintenance_version }}"
+    version_to_install: "{{
+        latest_version.stdout_lines[0] if btrfsmaintenance_version == 'latest' else btrfsmaintenance_version
+      }}"
 
 - when: version_to_install != installed_version.stdout_lines[0]
   block:
-    - name: Ensure source directory exists
-      file:
+    - name: ensure source directory exists
+      ansible.builtin.file:
         state: directory
         path: /usr/local/src
+        owner: root
+        group: root
+        mode: 0755
 
-    - name: Clone source code
-      git:
+    - name: clone source code
+      ansible.builtin.git:
         repo: "{{ btrfsmaintenance_repository }}"
         version: "v{{ version_to_install }}"
         clone: true
@@ -44,8 +49,8 @@
         dest: /usr/local/src/btrfsmaintenance
 
     # the dist-install.sh script from the repo does a crappy job, therefore do it manually
-    - name: "Install btrfsmaintenance scripts version {{ version_to_install }}"
-      shell: |
+    - name: install btrfsmaintenance scripts version {{ version_to_install }}
+      ansible.builtin.shell: |
         install -d -oroot -groot -m755 {{ __btrfsmaintenance_install_path }}
         install -oroot -groot -m755 btrfs-*.sh btrfsmaintenance-refresh-cron.sh {{ __btrfsmaintenance_install_path }}/
         install -oroot -groot -m644 btrfsmaintenance-functions {{ __btrfsmaintenance_install_path }}/
@@ -55,16 +60,16 @@
         chdir: /usr/local/src/btrfsmaintenance
       changed_when: true
 
-    - name: Reload systemd configs
-      systemd:
+    - name: reload systemd configs
+      ansible.builtin.systemd:
         daemon_reload: true
       notify: restart systemd-swap
 
-    - name: Create version file
-      copy:
+    - name: create version file
+      ansible.builtin.copy:
         dest: "/usr/share/btrfsmaintenance/version"
         force: true
         owner: root
         group: root
         content: "{{ version_to_install }}"
-        mode: "644"
+        mode: "0644"

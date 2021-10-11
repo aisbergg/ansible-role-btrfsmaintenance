@@ -1,0 +1,5 @@
+---
+- name: install btrfsmaintenance
+  community.general.pacman:
+    name: btrfsmaintenance
+    state: present

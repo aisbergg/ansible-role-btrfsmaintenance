@@ -1,8 +1,8 @@
 ---
-- name: Generate configuration
+- name: generate configuration
   vars:
     cfg: "{{ __btrfsmaintenance_config_defaults | combine(btrfsmaintenance_config) }}"
-  template:
+  ansible.builtin.template:
     src: btrfsmaintenance.j2
     dest: "{{ __btrfsmaintenance_config_file }}"
     owner: root
@@ -10,15 +10,15 @@
     mode: 0644
   notify: restart btrfsmaintenance
 
-- name: Enable scripts
-  systemd:
+- name: enable scripts
+  ansible.builtin.systemd:
     name: btrfsmaintenance-refresh
     enabled: true
     state: stopped
   when: btrfsmaintenance_service_enabled
 
-- name: Disable scripts
-  systemd:
+- name: disable scripts
+  ansible.builtin.systemd:
     name: "{{ item }}"
     enabled: false
     state: stopped

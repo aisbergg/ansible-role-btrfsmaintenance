@@ -1,17 +1,27 @@
 ---
-- name: Include OS-specific variables
-  tags: btrfsmaintenance
-  include_vars: "{{ item }}"
+- name: include OS-specific variables
+  tags: [btrfsmaintenance, always]
+  ansible.builtin.include_vars: "{{ item }}"
   with_first_found:
     - files:
-      - "{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version }}.yml"
-      - "{{ ansible_distribution | lower }}.yml"
-      - "{{ ansible_os_family | lower }}-{{ ansible_distribution_major_version }}.yml"
-      - "{{ ansible_os_family | lower }}.yml"
+        - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}.yml"
+        - "{{ ansible_distribution | lower }}.yml"
+        - "{{ ansible_os_family | lower }}_{{ ansible_distribution_major_version }}.yml"
+        - "{{ ansible_os_family | lower }}.yml"
       skip: true
 
-- import_tasks: install.yml
-  tags: btrfsmaintenance
+- name: include installation tasks
+  tags: [btrfsmaintenance, btrfsmaintenance_install, install]
+  ansible.builtin.include_tasks: "{{ task_file }}"
+  loop_control:
+    loop_var: task_file
+  with_first_found:
+    - "install_{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version }}.yml"
+    - "install_{{ ansible_distribution | lower }}.yml"
+    - "install_{{ ansible_os_family | lower }}_{{ ansible_distribution_major_version }}.yml"
+    - "install_{{ ansible_os_family | lower }}.yml"
+    - "install_general.yml"
 
-- import_tasks: configure.yml
-  tags: btrfsmaintenance
+- name: include configuration tasks
+  tags: [btrfsmaintenance, btrfsmaintenance_config, config]
+  ansible.builtin.import_tasks: configure.yml

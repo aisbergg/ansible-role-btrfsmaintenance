@@ -1,0 +1,5 @@
+---
+- name: install btrfsmaintenance
+  ansible.builtin.dnf:
+    name: btrfsmaintenance
+    state: present
