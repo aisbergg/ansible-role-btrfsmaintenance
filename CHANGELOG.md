@@ -2,6 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
+- [2.1.0 (2022-01-28)](#2.1.0-2022-01-28)
 - [2.0.0 (2021-10-11)](#200-2021-10-11)
 - [1.2.2 (2020-05-28)](#122-2020-05-28)
 - [1.2.1 (2020-05-18)](#121-2020-05-18)
@@ -11,6 +12,21 @@ All notable changes to this project will be documented in this file.
 - [1.0.0 (2020-03-19)](#100-2020-03-19)
 
 ---
+
+<a name="2.1.0"></a>
+## [2.1.0](https://github.com/aisbergg/ansible-role-btrfsmaintenance/compare/v2.0.0...2.1.0) (2022-01-28)
+
+### CI Configuration
+
+- fix automatic release and publish process
+
+### Chores
+
+- include changelog in bump commits
+- update changelog template
+- **.ansible-lint:** update linter config
+- **requirements.yml:** add role requirements
+
 
 <a name="2.0.0"></a>
 ## [2.0.0](https://github.com/aisbergg/ansible-role-btrfsmaintenance/compare/v1.2.2...v2.0.0) (2021-10-11)
@@ -89,9 +105,4 @@ All notable changes to this project will be documented in this file.
 <a name="1.0.0"></a>
 ## [1.0.0]() (2020-03-19)
 
-### Bug Fixes
-
-- set the default state to stopped, so that the task doesn't change all the time
-- linting errors
-- typo
-
+Initial Release
